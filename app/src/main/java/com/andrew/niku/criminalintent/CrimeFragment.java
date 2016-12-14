@@ -1,5 +1,7 @@
 package com.andrew.niku.criminalintent;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -100,6 +102,11 @@ public class CrimeFragment extends Fragment {
         crimeFragment.setArguments(args);
         return crimeFragment;
 
+    }
+
+    public void returnResult() {
+        Intent intent = CrimeListFragment.getIntentForResult(getActivity(), mCrime.getId());
+        getActivity().setResult(Activity.RESULT_OK, intent);
     }
 
 }

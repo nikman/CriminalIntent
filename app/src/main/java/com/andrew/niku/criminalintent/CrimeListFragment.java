@@ -1,5 +1,6 @@
 package com.andrew.niku.criminalintent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -24,13 +26,17 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
 
     private static final String TAG = "CrimeListFragment";
+    private static final String EXTRA_CRIME_ID = "com.andrew.niku.criminalintent.crime_id";
+    private static int REQUEST_CRIME = 1;
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mCrimeAdapter;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
@@ -55,7 +61,16 @@ public class CrimeListFragment extends Fragment {
             mCrimeAdapter.notifyDataSetChanged();
         }
 
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CRIME) {
+            /*if (data.getSerializableExtra() == ...) {
+
+            }*/
+        }
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -76,9 +91,12 @@ public class CrimeListFragment extends Fragment {
         public CrimeHolder(View itemView) {
             super(itemView);
 
-            mCrimeCheckboxSolved = (CheckBox) itemView.findViewById(R.id.list_item_crime_solved_check_box);
-            mCrimeTitleTextView = (TextView) itemView.findViewById(R.id.list_item_title_text_view);
-            mCrimeDateTextView = (TextView) itemView.findViewById(R.id.list_item_date_text_view);
+            mCrimeCheckboxSolved =
+                    (CheckBox) itemView.findViewById(R.id.list_item_crime_solved_check_box);
+            mCrimeTitleTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_title_text_view);
+            mCrimeDateTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_date_text_view);
 
             itemView.setOnClickListener(this);
 
@@ -98,7 +116,8 @@ public class CrimeListFragment extends Fragment {
 //            Intent intent = new Intent(getActivity(), CrimeActivity.class);
 
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
-            startActivity(intent);
+            //startActivity(intent);
+            startActivityForResult(intent, REQUEST_CRIME);
 
         }
     }
@@ -144,6 +163,14 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateUI();
+        //updateUI();
     }
+
+    public static Intent getIntentForResult(Context packageContext, UUID crimeID) {
+        Intent intent = new Intent(packageContext, CrimeListFragment.class);
+        intent.putExtra(EXTRA_CRIME_ID, crimeID);
+
+        return intent;
+    }
+
 }
