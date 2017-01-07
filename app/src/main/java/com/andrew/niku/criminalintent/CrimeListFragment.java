@@ -77,17 +77,6 @@ public class CrimeListFragment extends Fragment {
 
         private Crime mCrime;
 
-        public CheckBox mCrimeCheckboxSolved;
-        public TextView mCrimeTitleTextView;
-        public TextView mCrimeDateTextView;
-
-        public void bindCrime(Crime crime) {
-            mCrime = crime;
-            mCrimeCheckboxSolved.setChecked(crime.isSolved());
-            mCrimeTitleTextView.setText(crime.getTitle());
-            mCrimeDateTextView.setText(crime.getDate().toString());
-        }
-
         public CrimeHolder(View itemView) {
             super(itemView);
 
@@ -100,6 +89,17 @@ public class CrimeListFragment extends Fragment {
 
             itemView.setOnClickListener(this);
 
+        }
+
+        public CheckBox mCrimeCheckboxSolved;
+        public TextView mCrimeTitleTextView;
+        public TextView mCrimeDateTextView;
+
+        public void bindCrime(Crime crime) {
+            mCrime = crime;
+            mCrimeCheckboxSolved.setChecked(crime.isSolved());
+            mCrimeTitleTextView.setText(crime.getTitle());
+            mCrimeDateTextView.setText(crime.getDate().toString());
         }
 
         @Override
@@ -115,9 +115,12 @@ public class CrimeListFragment extends Fragment {
 
 //            Intent intent = new Intent(getActivity(), CrimeActivity.class);
 
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
-            //startActivity(intent);
-            startActivityForResult(intent, REQUEST_CRIME);
+//            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+//            //startActivity(intent);
+//            startActivityForResult(intent, REQUEST_CRIME);
+
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+            startActivity(intent);
 
         }
     }
