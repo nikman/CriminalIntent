@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -30,6 +31,7 @@ public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
+    private static final int REQUEST_DATE = 0;
 
     private Crime mCrime;
     private EditText mTitleEditField;
@@ -46,6 +48,25 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID) args.getSerializable(ARG_CRIME_ID);
 
         mCrime = CrimeLab.getInstance(getActivity()).getCrime(crimeId);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_DATE) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setDate(date);
+            updateDate();
+        }
+
+    }
+
+    private void updateDate() {
+        mDateButton.setText(mCrime.getDate().toString());
     }
 
     @Nullable
@@ -75,7 +96,7 @@ public class CrimeFragment extends Fragment {
         });
 
         mDateButton = (Button) view.findViewById(R.id.crime_date_button);
-        mDateButton.setText(mCrime.getDate().toString());
+        updateDate();
         if (mDateButton != null) {
             mDateButton.setText(DateFormat.format("EEE, d MMM yyyy HH:mm", mCrime.getDate()).toString());
             //mDateButton.setEnabled(false);
@@ -83,7 +104,8 @@ public class CrimeFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     FragmentManager fragmentManager = getFragmentManager();
-                    DatePickerFragment datePickerDialog = new DatePickerFragment();
+                    DatePickerFragment datePickerDialog = DatePickerFragment.newInstance(mCrime.getDate());
+                    datePickerDialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                     datePickerDialog.show(fragmentManager, DIALOG_DATE);
                 }
             });
