@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -29,12 +29,22 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin">
 
-        <Button
-            android:layout_width="wrap_content"
+        <com.github.skydoves.ElasticButton
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/crime_date_button"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:padding="@dimen/widget_padding"
-            android:layout_weight="2"/>
+            android:background="@drawable/ripple"
+            app:button_backgroundColor="#30354b"
+            app:button_round="20"
+            app:button_scale="0.8"
+            app:button_duration="300"
+            app:button_labelText="Date of crime"
+            app:button_labelColor="#ffffff"
+            app:button_labelSize="16"
+            app:button_labelStyle="bold"/>
 
         <CheckBox
             android:layout_width="wrap_content"

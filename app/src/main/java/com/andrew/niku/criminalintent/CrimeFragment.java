@@ -18,6 +18,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import com.github.skydoves.ElasticButton;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -95,16 +97,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton = (Button) view.findViewById(R.id.crime_date_button);
+        mDateButton = (ElasticButton) view.findViewById(R.id.crime_date_button);
         updateDate();
         if (mDateButton != null) {
-            mDateButton.setText(DateFormat.format("EEE, d MMM yyyy HH:mm", mCrime.getDate()).toString());
+            mDateButton.setText(
+                    DateFormat.format("EEE, d MMM yyyy HH:mm", mCrime.getDate()).toString());
             //mDateButton.setEnabled(false);
             mDateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     FragmentManager fragmentManager = getFragmentManager();
-                    DatePickerFragment datePickerDialog = DatePickerFragment.newInstance(mCrime.getDate());
+                    DatePickerFragment datePickerDialog =
+                            DatePickerFragment.newInstance(mCrime.getDate());
                     datePickerDialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                     datePickerDialog.show(fragmentManager, DIALOG_DATE);
                 }
