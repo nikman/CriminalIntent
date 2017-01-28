@@ -251,7 +251,7 @@ public class CrimeListFragment extends Fragment {
         String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, crimeCount);
 
         Logger.withTag("updateSubTitle() called. mIsSubtitleVisible = " + mIsSubtitleVisible);
-        if (!mIsSubtitleVisible) {
+        if (mIsSubtitleVisible) {
             subtitle = null;
             AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
             appCompatActivity.getSupportActionBar().setSubtitle(subtitle);

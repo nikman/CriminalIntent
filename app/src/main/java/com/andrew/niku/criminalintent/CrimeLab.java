@@ -1,6 +1,12 @@
 package com.andrew.niku.criminalintent;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.andrew.niku.criminalintent.database.CrimeBaseHelper;
+import com.andrew.niku.criminalintent.database.CrimeDbSchema;
+import com.andrew.niku.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +19,9 @@ public class CrimeLab {
 
     private static CrimeLab sInstance;
 
-    private List<Crime> mCrimes;
+    //private List<Crime> mCrimes;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
     static CrimeLab getInstance(Context context) {
 
@@ -24,35 +32,46 @@ public class CrimeLab {
     }
 
     private CrimeLab(Context context) {
-//        mAppContext = appContext;
-        mCrimes = new ArrayList<>();
-/*
-        for (int i = 0; i < 100; i++) {
-            Crime crime = new Crime();
-            crime.setTitle("Crime #" + i);
-            crime.setSolved(i % 2 == 0);
-            mCrimes.add(crime);
-        }*/
+
+        mContext = context.getApplicationContext();
+        mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();
+        //mCrimes = new ArrayList<>();
+
     }
 
     public List<Crime> getCrimes() {
-        return mCrimes;
+        //return mCrimes;
+        return new ArrayList<>();
     }
 
     public Crime getCrime(UUID id) {
 
-        for (Crime crime : mCrimes) {
+        /*for (Crime crime : mCrimes) {
             if (crime.getId().equals(id)) {
                 return  crime;
             }
-        }
+        }*/
 
         return null;
 
     }
 
     public void addCrime(Crime crime) {
-        mCrimes.add(crime);
+        //mCrimes.add(crime);
+        ContentValues contentValues = getContentValues(crime);
+        mDatabase.insert(CrimeTable.NAME, null, contentValues);
+    }
+
+    private static ContentValues getContentValues(Crime crime) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CrimeTable.Cols.UUID, crime.getId().toString());
+        contentValues.put(CrimeTable.Cols.TITLE, crime.getTitle());
+        contentValues.put(CrimeTable.Cols.DATE, crime.getDate().getTime());
+        contentValues.put(CrimeTable.Cols.SOLVED, crime.isSolved() ? 1 : 0);
+
+        return contentValues;
+
     }
 
 }
