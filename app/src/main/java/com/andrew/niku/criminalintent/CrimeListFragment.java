@@ -72,6 +72,7 @@ public class CrimeListFragment extends Fragment {
             mCrimeAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mCrimeAdapter);
         } else {
+            mCrimeAdapter.setCrimes(crimes);
             mCrimeAdapter.notifyDataSetChanged();
         }
 
@@ -154,6 +155,10 @@ public class CrimeListFragment extends Fragment {
             //Log.d(TAG, "getItemCount() call. size = " + mCrimes.size());
             //Logger.withTag(TAG).log("getItemCount() call. size = " + mCrimes.size()).log("---");
             return mCrimes.size();
+        }
+
+        public void setCrimes(List crimes) {
+            mCrimes = crimes;
         }
 
         @Override

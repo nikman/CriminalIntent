@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -22,6 +21,8 @@ import com.github.skydoves.ElasticButton;
 
 import java.util.Date;
 import java.util.UUID;
+
+import static android.text.format.DateFormat.*;
 
 /**
  * Created by niku on 01.12.2016.
@@ -37,8 +38,9 @@ public class CrimeFragment extends Fragment {
 
     private Crime mCrime;
     private EditText mTitleEditField;
-    private Button mDateButton;
+    private ElasticButton mDateButton;
     private CheckBox mSolvedCheckBox;
+    private ElasticButton mReportButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class CrimeFragment extends Fragment {
         updateDate();
         if (mDateButton != null) {
             mDateButton.setText(
-                    DateFormat.format("EEE, d MMM yyyy HH:mm", mCrime.getDate()).toString());
+                    format("EEE, d MMM yyyy HH:mm", mCrime.getDate()).toString());
             //mDateButton.setEnabled(false);
             mDateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,6 +128,19 @@ public class CrimeFragment extends Fragment {
             });
         }
 
+        mReportButton = (ElasticButton) view.findViewById(R.id.crime_report_button);
+        mReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+                intent = Intent.createChooser(intent, getString(R.string.send_report));
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -143,6 +158,42 @@ public class CrimeFragment extends Fragment {
     public void returnResult() {
         Intent intent = CrimeListFragment.getIntentForResult(getActivity(), mCrime.getId());
         getActivity().setResult(Activity.RESULT_OK, intent);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.getInstance(getActivity()).updateCrime(mCrime);
+    }
+
+    private String getCrimeReport() {
+
+        String solvedString = null;
+
+        if (mCrime.isSolved()) {
+            solvedString = getString(R.string.crime_report_solved);
+        } else {
+            solvedString = getString(R.string.crime_report_unsolved);
+        }
+
+        String dateFormat = "EEE, MMM dd";
+        String dateString =
+                DateFormat.format(dateFormat,
+                        mCrime.getDate()).toString();
+
+        String suspect = mCrime.getSuspect();
+
+        if (suspect == null) {
+            suspect = getString(R.string.crime_report_no_suspect);
+        } else {
+            suspect = getString(R.string.crime_report_suspect, suspect);
+        }
+
+        String report = getString(R.string.crime_report,
+                mCrime.getTitle(), dateString, solvedString, suspect);
+
+        return suspect;
+
     }
 
 }

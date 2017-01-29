@@ -27,10 +27,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin">
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
         <com.github.skydoves.ElasticButton
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/crime_date_button"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -47,11 +48,54 @@
             app:button_labelStyle="bold"/>
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/crime_solved_label"
             android:id="@+id/crime_solved_check_box"
             android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.github.skydoves.ElasticButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/crime_suspect_button"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:padding="@dimen/widget_padding"
+            android:background="@drawable/ripple"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            app:button_backgroundColor="#30354b"
+            app:button_round="20"
+            app:button_scale="0.8"
+            app:button_duration="300"
+            app:button_labelText="@string/crime_suspect_text"
+            app:button_labelColor="#ffffff"
+            app:button_labelSize="16"
+            app:button_labelStyle="bold"/>
+
+        <com.github.skydoves.ElasticButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/crime_report_button"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:padding="@dimen/widget_padding"
+            android:background="@drawable/ripple"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            app:button_backgroundColor="#30354b"
+            app:button_round="20"
+            app:button_scale="0.8"
+            app:button_duration="300"
+            app:button_labelText="@string/crime_report_text"
+            app:button_labelColor="#ffffff"
+            app:button_labelSize="16"
+            app:button_labelStyle="bold"/>
 
     </LinearLayout>
 

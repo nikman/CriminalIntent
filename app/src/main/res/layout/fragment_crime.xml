@@ -47,5 +47,40 @@
         android:text="@string/crime_solved_label"
         android:id="@+id/crime_solved_check_box"/>
 
+    <com.github.skydoves.ElasticButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_suspect_button"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/widget_padding"
+        android:background="@drawable/ripple"
+        app:button_backgroundColor="#30354b"
+        app:button_round="20"
+        app:button_scale="0.8"
+        app:button_duration="300"
+        app:button_labelText="@string/crime_suspect_text"
+        app:button_labelColor="#ffffff"
+        app:button_labelSize="16"
+        app:button_labelStyle="bold"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+
+    <com.github.skydoves.ElasticButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_report_button"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/widget_padding"
+        android:background="@drawable/ripple"
+        app:button_backgroundColor="#30354b"
+        app:button_round="20"
+        app:button_scale="0.8"
+        app:button_duration="300"
+        app:button_labelText="@string/crime_report_text"
+        app:button_labelColor="#ffffff"
+        app:button_labelSize="16"
+        app:button_labelStyle="bold"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 </LinearLayout>
