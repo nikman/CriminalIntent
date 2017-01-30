@@ -83,4 +83,22 @@
         app:button_labelStyle="bold"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
+    <com.github.skydoves.ElasticButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_delete_button"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/widget_padding"
+        android:background="@drawable/ripple"
+        app:button_backgroundColor="#30354b"
+        app:button_round="20"
+        app:button_scale="0.8"
+        app:button_duration="300"
+        app:button_labelText="@string/crime_title_delete"
+        app:button_labelColor="#ffffff"
+        app:button_labelSize="16"
+        app:button_labelStyle="bold"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+
 </LinearLayout>

@@ -2,7 +2,10 @@ package com.andrew.niku.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,13 +37,19 @@ public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
+
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_CONTACT = 1;
 
     private Crime mCrime;
     private EditText mTitleEditField;
     private ElasticButton mDateButton;
     private CheckBox mSolvedCheckBox;
+
+    private ElasticButton mDeleteButton;
+
     private ElasticButton mReportButton;
+    private ElasticButton mSuspectButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +74,31 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate();
+        } else if (requestCode == REQUEST_CONTACT && data != null) {
+
+            Uri contactUri = data.getData();
+
+            // Определим поля
+            String[] queryFields = new String[] {ContactsContract.Contacts.DISPLAY_NAME};
+
+            // contactUri здесь выполняет роль where
+            Cursor c =
+                    getActivity()
+                            .getContentResolver()
+                            .query(contactUri, queryFields, null, null, null);
+
+            try {
+                if (c.getCount() == 0) {
+                    return;
+                }
+                // возьмем первый столбец - имя
+                c.moveToFirst();
+                String suspect = c.getString(0);
+                mCrime.setSuspect(suspect);
+                mSuspectButton.setText(suspect);
+            } finally {
+                c.close();
+            }
         }
 
     }
@@ -138,6 +172,30 @@ public class CrimeFragment extends Fragment {
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
                 intent = Intent.createChooser(intent, getString(R.string.send_report));
                 startActivity(intent);
+            }
+        });
+
+        final Intent pickContact =
+                new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+
+        mSuspectButton = (ElasticButton) view.findViewById(R.id.crime_suspect_button);
+        mSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(pickContact, REQUEST_CONTACT);
+            }
+        });
+
+        if (mCrime.getSuspect() != null) {
+            mSuspectButton.setText(mCrime.getSuspect());
+        }
+
+        mDeleteButton = (ElasticButton) view.findViewById(R.id.crime_delete_button);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CrimeLab.getInstance(getContext()).deleteCrime(mCrime);
+                getActivity().finish();
             }
         });
 
