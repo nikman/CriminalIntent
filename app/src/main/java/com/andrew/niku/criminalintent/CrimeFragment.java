@@ -2,13 +2,18 @@ package com.andrew.niku.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -19,9 +24,12 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.github.skydoves.ElasticButton;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -40,8 +48,10 @@ public class CrimeFragment extends Fragment {
 
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
+    private static final int REQUEST_PHOTO = 2;
 
     private Crime mCrime;
+    private File mPhotoFile;
     private EditText mTitleEditField;
     private ElasticButton mDateButton;
     private CheckBox mSolvedCheckBox;
@@ -51,16 +61,21 @@ public class CrimeFragment extends Fragment {
     private ElasticButton mReportButton;
     private ElasticButton mSuspectButton;
 
+    private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        //mCrime = new Crime();
-        /*UUID crimeID = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
-        mCrime = CrimeLab.getInstance(getActivity()).getCrime(crimeID);*/
+
         Bundle args = getArguments();
         UUID crimeId = (UUID) args.getSerializable(ARG_CRIME_ID);
 
         mCrime = CrimeLab.getInstance(getActivity()).getCrime(crimeId);
+
+        mPhotoFile = CrimeLab.getInstance(getActivity()).getPhotoFile(mCrime);
+
     }
 
     @Override
@@ -99,6 +114,8 @@ public class CrimeFragment extends Fragment {
             } finally {
                 c.close();
             }
+        } else if (requestCode == REQUEST_PHOTO) {
+            updatePhotoView();
         }
 
     }
@@ -166,10 +183,17 @@ public class CrimeFragment extends Fragment {
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
+
+                Intent intent = ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setText(getCrimeReport())
+                        .setSubject(getString(R.string.crime_report_subject))
+                        .getIntent();
+
+                /*Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));*/
                 intent = Intent.createChooser(intent, getString(R.string.send_report));
                 startActivity(intent);
             }
@@ -190,6 +214,12 @@ public class CrimeFragment extends Fragment {
             mSuspectButton.setText(mCrime.getSuspect());
         }
 
+        PackageManager packageManager = getActivity().getPackageManager();
+        if (packageManager.resolveActivity(pickContact,
+                PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            mSuspectButton.setEnabled(false);
+        }
+
         mDeleteButton = (ElasticButton) view.findViewById(R.id.crime_delete_button);
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,6 +228,34 @@ public class CrimeFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        mPhotoButton = (ImageButton) view.findViewById(R.id.crime_camera);
+
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        boolean canTakePhoto =
+                mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
+        mPhotoButton.setEnabled(canTakePhoto);
+
+        if (canTakePhoto) {
+            //Uri uri = Uri.fromFile(mPhotoFile);
+            Uri uri = FileProvider.getUriForFile(
+                            getActivity(),
+                            "com.andrew.niku.criminalintent",
+                            mPhotoFile);
+
+            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
+
+        mPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(captureImage, REQUEST_PHOTO);
+            }
+        });
+
+        mPhotoView = (ImageView) view.findViewById(R.id.crime_photo);
+        updatePhotoView();
 
         return view;
     }
@@ -252,6 +310,15 @@ public class CrimeFragment extends Fragment {
 
         return suspect;
 
+    }
+
+    private void updatePhotoView() {
+        if (mPhotoFile == null || !mPhotoFile.exists()) {
+            mPhotoView.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mCrime.getPhotoFilename(), getActivity());
+            mPhotoView.setImageBitmap(bitmap);
+        }
     }
 
 }

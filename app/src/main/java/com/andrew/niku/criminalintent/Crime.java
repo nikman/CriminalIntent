@@ -13,6 +13,8 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+    private String mSuspect;
+    private static String FILE_PHOTO_EXTENTION = ".jpg";
 
     public String getSuspect() {
         return mSuspect;
@@ -21,8 +23,6 @@ public class Crime {
     public void setSuspect(String suspect) {
         mSuspect = suspect;
     }
-
-    private String mSuspect;
 
     public Crime() {
         this(UUID.randomUUID());
@@ -60,4 +60,9 @@ public class Crime {
     public void setDate(Date date) {
         mDate = date;
     }
+
+    public String getPhotoFilename() {
+        return "IMG_" + getId().toString() + FILE_PHOTO_EXTENTION;
+    }
+
 }

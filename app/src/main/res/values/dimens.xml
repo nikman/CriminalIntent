@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="widget_padding">16dp</dimen>
     <dimen name="list_item_widget_padding">4dp</dimen>
+    <dimen name="crime_photo_side">80dp</dimen>
 </resources>
