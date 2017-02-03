@@ -39,7 +39,7 @@
             app:button_labelStyle="bold"/>
 
         <CheckBox
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/crime_solved_label"
             android:id="@+id/crime_solved_check_box"
@@ -50,7 +50,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
         <com.github.skydoves.ElasticButton
             android:layout_width="wrap_content"
