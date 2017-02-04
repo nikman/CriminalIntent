@@ -45,12 +45,12 @@ public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID = "crime_id";
 
-    private static final String DIALOG_DATE = "DialogDate";
-    private static final String DIALOG_PHOTO = "DialogPhoto";
-
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
     private static final int REQUEST_PHOTO = 2;
+
+    private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_PHOTO = "DialogPhoto";
 
     private Crime mCrime;
     private File mPhotoFile;
