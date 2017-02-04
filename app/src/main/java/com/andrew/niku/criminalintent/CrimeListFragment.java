@@ -39,6 +39,9 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mIsSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
+        }
         setHasOptionsMenu(true);
     }
 
@@ -52,10 +55,6 @@ public class CrimeListFragment extends Fragment {
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycle_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        if (savedInstanceState != null) {
-            mIsSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
-        }
 
         updateUI();
 
@@ -236,8 +235,9 @@ public class CrimeListFragment extends Fragment {
             case R.id.menu_item_show_subtitle:
 
                 getActivity().invalidateOptionsMenu();
-                updateSubTitle();
                 mIsSubtitleVisible = !mIsSubtitleVisible;
+                updateSubTitle();
+
                 return true;
 
             case R.id.menu_item_options:
@@ -250,19 +250,20 @@ public class CrimeListFragment extends Fragment {
 
     private void updateSubTitle() {
 
-        CrimeLab crimeLab = CrimeLab.getInstance(getActivity());
-        int crimeCount = crimeLab.getCrimes().size();
-
-        String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, crimeCount);
-
         Logger.withTag("updateSubTitle() called. mIsSubtitleVisible = " + mIsSubtitleVisible);
+        String subtitle = null;
         if (mIsSubtitleVisible) {
-            subtitle = null;
-            AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-            appCompatActivity.getSupportActionBar().setSubtitle(subtitle);
+
+            CrimeLab crimeLab = CrimeLab.getInstance(getActivity());
+            int crimeCount = crimeLab.getCrimes().size();
+
+            subtitle = getResources().getQuantityString(
+                    R.plurals.subtitle_plural, crimeCount, crimeCount);
+
         }
 
-
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        appCompatActivity.getSupportActionBar().setSubtitle(subtitle);
 
     }
 
