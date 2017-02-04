@@ -42,7 +42,9 @@ public class CrimeListFragment extends Fragment {
         if (savedInstanceState != null) {
             mIsSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
         }
+
         setHasOptionsMenu(true);
+
     }
 
     @Nullable
