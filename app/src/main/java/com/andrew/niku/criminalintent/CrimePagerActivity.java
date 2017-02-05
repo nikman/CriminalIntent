@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,12 +17,19 @@ import java.util.UUID;
  * Created by niku on 18.12.2016.
  */
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity
+        extends AppCompatActivity
+        implements CrimeFragment.Callbacks{
 
     private static final String EXTRA_CRIME_ID = "com.andrew.niku.criminalintent.crime_id";
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

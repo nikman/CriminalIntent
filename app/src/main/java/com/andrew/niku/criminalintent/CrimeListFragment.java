@@ -29,12 +29,29 @@ public class CrimeListFragment extends Fragment {
 
     private static final String TAG = "CrimeListFragment";
     private static final String EXTRA_CRIME_ID = "com.andrew.niku.criminalintent.crime_id";
-    private static int REQUEST_CRIME = 1;
+    //private static int REQUEST_CRIME = 1;
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mCrimeAdapter;
     private boolean mIsSubtitleVisible;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +81,7 @@ public class CrimeListFragment extends Fragment {
 
     }
 
-    private void updateUI() {
+    public void updateUI() {
 
         CrimeLab crimeLab = CrimeLab.getInstance(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
@@ -137,8 +154,10 @@ public class CrimeListFragment extends Fragment {
 //            //startActivity(intent);
 //            startActivityForResult(intent, REQUEST_CRIME);
 
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
-            startActivity(intent);
+//            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+//            startActivity(intent);
+
+            mCallbacks.onCrimeSelected(mCrime);
 
         }
     }
@@ -232,7 +251,8 @@ public class CrimeListFragment extends Fragment {
                 //Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
                 //startActivity(intent);
 
-
+                updateUI();
+                mCallbacks.onCrimeSelected(crime);
 
                 return true;
 
