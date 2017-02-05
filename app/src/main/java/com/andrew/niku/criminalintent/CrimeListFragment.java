@@ -229,8 +229,10 @@ public class CrimeListFragment extends Fragment {
 
                 Crime crime = new Crime();
                 CrimeLab.getInstance(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
-                startActivity(intent);
+                //Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+                //startActivity(intent);
+
+
 
                 return true;
 
